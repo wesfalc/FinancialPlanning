@@ -2,10 +2,13 @@ package com.wesfalc.planning;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @SpringBootApplication
@@ -16,27 +19,29 @@ public class Controller {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/calculate", method = {RequestMethod.POST, RequestMethod.GET})
-    public String calculate(HttpServletRequest request,
-                            @RequestParam("startingAmount") double P,
-                            @RequestParam("monthlyContribution") double PMT,
-                            @RequestParam("years") double t,
-                            @RequestParam("annualRateOfReturn") double ror) {
-        log.info("Calculating.");
+    public ModelAndView calculate(HttpServletRequest request,
+                                  @RequestParam("startingAmount") double P,
+                                  @RequestParam("monthlyContribution") double PMT,
+                                  @RequestParam("years") double t,
+                                  @RequestParam("annualRateOfReturn") double ror,
+                                  Model model) {
+        log.info("Calculating. startingAmount = {}, monthly contribution = {}, years = {}, rate of return = {}", P, PMT, t, ror);
 
         double r = ror / 100;
 
-        String result = doTheMath(P, PMT, t, r);
+        Result result = doTheMath(P, PMT, t, r);
+        model.addAttribute("result", result);
 
-        return result;
+        return new ModelAndView("results");
     }
 
-    private String doTheMath(double P, double PMT, double t, double r) {
+    private Result doTheMath(double P, double PMT, double t, double r) {
 
+        Result result = new Result();
+        result.startingAmount(P);
+        result.rateOfReturn(r * 100);
 
-        StringBuilder output = new StringBuilder();
-        String str = String.format("Starting Amount = %s <br>Hypothetical Annual Rate of Return = %.1f%%<br>", moneyFormat(P), r * 100);
-
-        output.append(str);
+        ResultRow row = new ResultRow();
 
         for (int time = 1; time <= t ; time ++) {
             double gain = PMT * ((Math.pow((1 + r / n), n * 1) - 1) / (r / n));
@@ -45,20 +50,22 @@ public class Controller {
 
             double earnings = P - lastP - 12 * PMT;
 
-            str = String.format("Year = %2d Investment = %s Earnings = %s Balance = %s<br>" ,
-                    time, moneyFormat(12 * PMT), moneyFormat(earnings), moneyFormat(P));
+            row.year(time);
+            row.investment(12 * PMT);
+            row.earnings(earnings);
+            row.balance(P);
+            result.addRow(row);
 
-            output.append(str);
-            output.append("\n");
+            row = new ResultRow();
+
+
+
         }
-        return output.toString().replaceAll("\\s", "&nbsp;");
+
+        return result;
     }
 
-    private static String moneyFormat(double finalAmount) {
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        String moneyString = formatter.format(finalAmount);
-        return moneyString;
-    }
+
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/sampleCalc", method = {RequestMethod.POST, RequestMethod.GET})

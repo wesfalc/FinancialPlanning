@@ -1,0 +1,20 @@
+
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Results</title>
+    <link th:href="@{result.css}" rel="stylesheet" />
+</head>
+<body>
+
+<table rules=rows >
+    <tr><th align="left">Year</th> <th align="left">Investment</th> <th align="left">Earnings</th> <th align="left">Balance</th></tr>
+    <tr><td>Start</td> <td>$0.00</td> <td>[[${result.rateOfReturn}]]% annually</td> <td> [[${result.startingAmountString}]]</td></tr>
+<th:block th:each="row: ${result.rows}">
+    <tr> <td> [[${row.year}]] </td> <td> [[${row.investmentString}]] </td> <td> [[${row.earningsString}]] </td> <td> [[${row.balanceString}]] </td> </tr>
+</th:block>
+</table>
+</body>
+</html>
+
+

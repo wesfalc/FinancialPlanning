@@ -13,4 +13,9 @@ public class StaticFileController
     public String index(HttpServletRequest request) throws Exception {
         return "mainpage";
     }
+
+    @GetMapping("/results")
+    public String resultPage(HttpServletRequest request) throws Exception {
+        return "results";
+    }
 }
