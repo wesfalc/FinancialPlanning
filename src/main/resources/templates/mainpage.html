@@ -1,0 +1,13 @@
+
+<form id="calculationForm" action="/calculate" method="post">
+	<table>
+		<tr><td>Starting Amount</td> <td><input type="number" step=100 name="startingAmount" value="0"></td></tr>
+		<tr><td>Years to Invest</td> <td><input type="number" name="years" value="30"></td></tr>
+		<tr><td>Additional Monthly Contribution</td> <td><input type="number" step="100" name="monthlyContribution"  value="500"></td></tr>
+		<tr><td>Annual Rate of Return</td> <td><input type="number" step="0.1" name="annualRateOfReturn" value="10.0"></td></tr>
+	</table>
+	<br>
+	<br>
+	<input type="reset" value="Reset" />
+	<input type="submit" value="Submit" />
+</form>
