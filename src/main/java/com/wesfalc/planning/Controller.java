@@ -20,7 +20,8 @@ public class Controller {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/", method = {RequestMethod.POST, RequestMethod.GET})
-    public ModelAndView calculate(Model model) {
+    public ModelAndView indexPage(Model model) {
+        log.info("Index page hit.");
         List<Event> events = new ArrayList<>();
         double P, PMT, ror, r;
         int t;
@@ -122,13 +123,4 @@ public class Controller {
         return result;
     }
 
-
-
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/sampleCalc", method = {RequestMethod.POST, RequestMethod.GET})
-    public String sampleCalc(HttpServletRequest request) throws Exception {
-        log.info("Sample calcualtion.");
-
-        return "Sample calculation.";
-    }
 }

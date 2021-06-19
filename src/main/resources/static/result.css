@@ -8,6 +8,10 @@
     border-width: 1px 0;
 }
 
+.deleteButton {
+    color: red;
+}
+
 .resultsTd , .resultsTh {
     width: 300px;
     font-size: 1em;
