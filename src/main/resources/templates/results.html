@@ -7,13 +7,20 @@
 </head>
 <body>
 
-<table rules=rows >
-    <tr><th align="left">Year</th> <th align="left">Investment</th> <th align="left">Earnings</th> <th align="left">Balance</th></tr>
-    <tr><td>Start</td> <td>$0.00</td> <td>[[${result.rateOfReturn}]]% annually</td> <td> [[${result.startingAmountString}]]</td></tr>
+<table class="resultsTable" rules=rows >
+    <tr class="resultsTr"><th class="resultsTh" align="left">Year</th> <th class="resultsTh" align="left">Investment</th> <th class="resultsTh" align="left">Earnings</th> <th class="resultsTh" align="left">Balance</th></tr>
+    <tr class="resultsTr"><td class="resultsTd">Start</td> <td class="resultsTd">$0.00</td> <td class="resultsTd">[[${result.rateOfReturn}]]% annually</td> <td class="resultsTd"> [[${result.startingAmountString}]]</td></tr>
 <th:block th:each="row: ${result.rows}">
-    <tr> <td> [[${row.year}]] </td> <td> [[${row.investmentString}]] </td> <td> [[${row.earningsString}]] </td> <td> [[${row.balanceString}]] </td> </tr>
+    <tr th:if="${row.isAnEvent}">
+        <td class="resultsTd">[[${row.event.year}]] - [[${row.event.description}]]</td>
+        <td class="resultsTd">[[${row.event.amountString}]] - [[${row.event.type}]]</td>
+    </tr>
+
+    <tr class="resultsTr"> <td class="resultsTd"> [[${row.year}]] </td> <td class="resultsTd"> [[${row.investmentString}]] </td> <td class="resultsTd"> [[${row.earningsString}]] </td> <td class="resultsTd"> [[${row.balanceString}]] </td> </tr>
 </th:block>
 </table>
+<br>
+<button onclick="location.href = '/'">Start Over</button>
 </body>
 </html>
 

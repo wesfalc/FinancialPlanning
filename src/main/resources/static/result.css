@@ -1,15 +1,35 @@
-table {
+.resultsTable {
     border-collapse: collapse;
 }
-tr {
+
+.resultsTr {
     font-size: 1em;
     border: solid;
     border-width: 1px 0;
 }
 
-td , th {
-    width: 200px;
+.resultsTd , .resultsTh {
+    width: 300px;
     font-size: 1em;
     padding: 4px;
     text-align: left;
+}
+td {
+    font-size: 1em;
+    padding: 4px;
+    text-align: left;
+}
+
+.amount {
+    width: 80px;
+}
+.year {
+    width: 40px;
+}
+.rateOfReturn {
+    width: 50px;
+}
+
+.textInputLabel {
+    border: 0;
 }

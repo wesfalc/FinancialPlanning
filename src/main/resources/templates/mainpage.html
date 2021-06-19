@@ -1,13 +1,96 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Results</title>
+	<link th:href="@{result.css}" rel="stylesheet" />
+</head>
+<body>
+
+
+<script>
+
+	var counter = 1;
+
+	function callThat() {
+		let table = document.getElementById("dataTable");
+		let newRow = table.insertRow();
+		let cell1 = newRow.insertCell(0);
+		let eventType = document.getElementById("eventType");
+		let eventAmount = document.getElementById("eventAmount");
+		let eventYear = document.getElementById("eventYear");
+		let eventDescription = document.getElementById("eventDescription");
+
+		cell1.innerText = eventDescription.value;
+        let cell2 = newRow.insertCell(1);
+        cell2.innerText = eventAmount.value;
+
+        let cell3 = newRow.insertCell(2);
+        cell3.innerText = "Year " + eventYear.value;
+
+        let cell4 = newRow.insertCell(3);
+        cell4.innerText = getTextFor(eventType.value);
+
+        let data = "eventType==" + eventType.value + "::eventAmount==" + eventAmount.value +
+				   "::eventYear==" + eventYear.value + "::eventDescription==" + eventDescription.value;
+
+        let cell5 = newRow.insertCell(4);
+        cell5.innerHTML = '<input type="hidden" name="eventData' + counter + '" value="' + data + '">';
+
+        counter++;
+    }
+
+    function getTextFor(eventType) {
+		switch (eventType) {
+			case "oneTimeContribution" : return "(One Time Contribution)";
+			case "monthlyContribution" : return "(Monthly Contribution)";
+			case "oneTimeWithdrawal"   : return "(One Time Withdrawal)";
+	   	    case "monthlyWithdrawal"   : return "(Monthly Withdrawal)";
+		}
+		return eventType;
+	}
+</script>
 
 <form id="calculationForm" action="/calculate" method="post">
-	<table>
-		<tr><td>Starting Amount</td> <td><input type="number" step=100 name="startingAmount" value="0"></td></tr>
-		<tr><td>Years to Invest</td> <td><input type="number" name="years" value="30"></td></tr>
-		<tr><td>Additional Monthly Contribution</td> <td><input type="number" step="100" name="monthlyContribution"  value="500"></td></tr>
-		<tr><td>Annual Rate of Return</td> <td><input type="number" step="0.1" name="annualRateOfReturn" value="10.0"></td></tr>
+	<table id="dataTable">
+		<tr><td>Starting Amount</td> <td><input class="amount" type="number" name="startingAmount" value="0"></td>
+			<td></td><td></td>
+		</tr>
+
+		<tr><td>Years to Invest</td> <td><input class="year" type="number" name="years" step="1" value="30"></td>
+			<td></td><td></td>
+		</tr>
+
+		<tr><td>Monthly Contribution</td> <td><input class="amount" type="number" name="monthlyContribution"  value="500"></td>
+			<td></td><td></td>
+		</tr>
+
+		<tr><td>Annual Rate of Return (%)</td>
+			<td><input class="rateOfReturn" type="number" step="0.1" name="annualRateOfReturn" value="10.0"></td>
+	        <td></td><td></td>
+		</tr>
 	</table>
 	<br>
 	<br>
 	<input type="reset" value="Reset" />
 	<input type="submit" value="Submit" />
 </form>
+<br>
+Add New Events
+<br>
+<br>
+<table id="inputTable">
+	<tr> <td>Description</td>
+		 <td><input type="text" value="" id="eventDescription"></td>
+		 <td>Type</td>
+		 <td><select name="eventType" id="eventType">
+			 <option value="oneTimeContribution">One Time Contribution</option>
+			 <option value="monthlyContribution">Monthly Contribution</option>
+			 <option value="oneTimeWithdrawal">One Time Withdrawal</option>
+			 <option value="monthlyWithdrawal">Monthly Withdrawal</option>
+		 </select></td>
+		<td>Amount</td>
+		<td><input type="number" class="amount" id="eventAmount" value="0"></td>
+		<td>Year</td>
+		<td><input type="number" class="year" step="1" id="eventYear" value="1"></td>
+		<td><button onclick="callThat()">Add Event</button></td></tr>
+</table>

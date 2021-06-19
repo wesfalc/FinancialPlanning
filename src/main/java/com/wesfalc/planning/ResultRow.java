@@ -10,6 +10,7 @@ public class ResultRow {
     private double investment;
     private double earnings;
     private double balance;
+    private Event event;
 
     public String balanceString() {
         return Utils.moneyFormat(balance);
@@ -21,5 +22,9 @@ public class ResultRow {
 
     public String earningsString() {
         return Utils.moneyFormat(earnings);
+    }
+
+    public boolean isAnEvent() {
+        return event != null;
     }
 }
