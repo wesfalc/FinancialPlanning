@@ -27,4 +27,8 @@ public class ResultRow {
     public boolean isAnEvent() {
         return event != null;
     }
+
+    public boolean isNotAnEvent() {
+        return event == null;
+    }
 }

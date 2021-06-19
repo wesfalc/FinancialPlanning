@@ -62,7 +62,19 @@ public class Controller {
             if (event.year() == time) {
                 log.info("added event to year {} , ev =  {}", time, event );
                 row.event(event);
+
+
+                switch (event.type()) {
+                    case ONE_TIME_CONTRIBUTION: P = P + event.amount(); break;
+                    case ONE_TIME_WITHDRAWAL:   P = P - event.amount(); break;
+                    case MONTHLY_CONTRIBUTION:  PMT = event.amount(); break;
+                    case MONTHLY_WITHDRAWAL:    PMT = -1 * event.amount(); break;
+                }
+                row.balance(P);
+                result.addRow(row);
+
                 eventIndex ++;
+                row = new ResultRow();
             }
         }
 

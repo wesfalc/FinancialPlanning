@@ -14,9 +14,11 @@
     <tr th:if="${row.isAnEvent}">
         <td class="resultsTd">[[${row.event.year}]] - [[${row.event.description}]]</td>
         <td class="resultsTd">[[${row.event.amountString}]] - [[${row.event.type}]]</td>
+        <td class="resultsTd">-</td>
+        <td class="resultsTd">[[${row.balanceString}]]</td>
     </tr>
 
-    <tr class="resultsTr"> <td class="resultsTd"> [[${row.year}]] </td> <td class="resultsTd"> [[${row.investmentString}]] </td> <td class="resultsTd"> [[${row.earningsString}]] </td> <td class="resultsTd"> [[${row.balanceString}]] </td> </tr>
+    <tr th:if="${row.isNotAnEvent}" class="resultsTr"> <td class="resultsTd"> [[${row.year}]] </td> <td class="resultsTd"> [[${row.investmentString}]] </td> <td class="resultsTd"> [[${row.earningsString}]] </td> <td class="resultsTd"> [[${row.balanceString}]] </td> </tr>
 </th:block>
 </table>
 <br>
