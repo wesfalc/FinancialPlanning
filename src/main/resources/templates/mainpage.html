@@ -18,24 +18,22 @@
 		let eventYear = document.getElementById("eventYear");
 		let eventDescription = document.getElementById("eventDescription");
 
-		cell1.innerText = eventDescription.value;
+		let data = "eventType==" + eventType.value + "::eventAmount==" + eventAmount.value +
+				"::eventYear==" + eventYear.value + "::eventDescription==" + eventDescription.value;
+
+		cell1.innerHTML = "Year " + eventYear.value + " - " + eventDescription.value +
+				           ' <input type="hidden" name="eventData' + counter + '" value="' + data + '">';
+
         let cell2 = newRow.insertCell(1);
-        cell2.innerText = eventAmount.value;
-
-        let cell3 = newRow.insertCell(2);
-        cell3.innerText = "Year " + eventYear.value;
-
-        let cell4 = newRow.insertCell(3);
-        cell4.innerText = getTextFor(eventType.value);
-
-        let data = "eventType==" + eventType.value + "::eventAmount==" + eventAmount.value +
-				   "::eventYear==" + eventYear.value + "::eventDescription==" + eventDescription.value;
-
-        let cell5 = newRow.insertCell(4);
-        cell5.innerHTML = '<input type="hidden" name="eventData' + counter + '" value="' + data + '">';
+        cell2.innerText = "$" + numberWithCommas(eventAmount.value) + ".00 " + getTextFor(eventType.value);
 
         counter++;
     }
+
+    // https://stackoverflow.com/a/2901298
+	function numberWithCommas(x) {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
 
     function getTextFor(eventType) {
 		switch (eventType) {
@@ -73,11 +71,10 @@
 		<div th:if="${events!=null}">
 			<th:block th:each="event: ${events}">
 				<tr>
-					<td>[[${event.description}]]</td>
-					<td>[[${event.amountString}]]</td>
-					<td>[[${event.year}]]</td>
-					<td>[[${event.type}]]</td>
-					<td><input type="hidden" th:name="${event.name}" th:value="${event.data}"></td>
+					<td> Year [[${event.year}]] - [[${event.description}]]
+						<input type="hidden" th:name="${event.name}" th:value="${event.data}">
+					</td>
+					<td>[[${event.amountString}]] [[${event.type}]] </td>
 				</tr>
     		</th:block>
 		</div>
@@ -104,7 +101,7 @@ Add New Events
 		 </select></td>
 	</tr>
 
-	<tr><td>Amount</td><td><input type="number" class="amount" id="eventAmount" value="0"></td>
+	<tr><td>Amount</td><td><input type="number" class="amount" step="1" id="eventAmount" value="0"></td>
 	</tr>
 
 	<tr><td>Year</td><td><input type="number" class="year" step="1" id="eventYear" value="1"></td>
