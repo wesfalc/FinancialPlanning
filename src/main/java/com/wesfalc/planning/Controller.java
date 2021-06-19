@@ -2,6 +2,7 @@ package com.wesfalc.planning;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,9 +15,9 @@ import java.util.Map;
 @Slf4j
 @SpringBootApplication
 @RestController
-public class Controller {
+public class Controller implements ErrorController {
 
-    private double n  = 12;  //numberOfTimesInterestIsCompoundedPerT ;
+    private double n = 12;  //numberOfTimesInterestIsCompoundedPerT ;
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/", method = {RequestMethod.POST, RequestMethod.GET})
@@ -41,6 +42,13 @@ public class Controller {
         model.addAttribute("basicData", basicData);
 
         return new ModelAndView("mainpage");
+    }
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/error", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView error(Model model) {
+        log.info("There was an error");
+        return indexPage(model);
     }
 
     @CrossOrigin(origins = "*")
