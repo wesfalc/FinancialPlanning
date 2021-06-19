@@ -22,18 +22,22 @@ public class Controller {
     @RequestMapping(value = "/", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView calculate(Model model) {
         List<Event> events = new ArrayList<>();
-        double P, PMT, t, ror, r;
+        double P, PMT, ror, r;
+        int t;
         P = 0;
         t = 30;
         PMT = 500;
         ror = 10;
         r = ror / 100;
 
+        BasicData basicData = new BasicData((int) P, t, (int) PMT, ror);
+
         YearToEventMap yearToEventMap = new YearToEventMap();
 
         Result result = doTheMath(P, PMT, t, r, yearToEventMap);
         model.addAttribute("result", result);
         model.addAttribute("events", events);
+        model.addAttribute("basicData", basicData);
 
         return new ModelAndView("mainpage");
     }
@@ -43,7 +47,7 @@ public class Controller {
     public ModelAndView calculate(HttpServletRequest request,@RequestParam Map<String,String> allRequestParams,
                                   @RequestParam("startingAmount") double P,
                                   @RequestParam("monthlyContribution") double PMT,
-                                  @RequestParam("years") double t,
+                                  @RequestParam("years") int t,
                                   @RequestParam("annualRateOfReturn") double ror,
                                   Model model) {
         log.info("Calculating. startingAmount = {}, monthly contribution = {}, years = {}, rate of return = {}", P, PMT, t, ror);
@@ -65,14 +69,17 @@ public class Controller {
 
         double r = ror / 100;
 
+        BasicData basicData = new BasicData((int) P, t, (int) PMT, ror);
+
         Result result = doTheMath(P, PMT, t, r, yearToEventMap);
         model.addAttribute("result", result);
         model.addAttribute("events", events);
+        model.addAttribute("basicData", basicData);
 
         return new ModelAndView("mainpage");
     }
 
-    private Result doTheMath(double P, double PMT, double t, double r, YearToEventMap yearToEventMap) {
+    private Result doTheMath(double P, double PMT, int t, double r, YearToEventMap yearToEventMap) {
 
         Result result = new Result();
         result.startingAmount(P);
