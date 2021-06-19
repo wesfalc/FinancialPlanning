@@ -19,6 +19,26 @@ public class Controller {
     private double n  = 12;  //numberOfTimesInterestIsCompoundedPerT ;
 
     @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/", method = {RequestMethod.POST, RequestMethod.GET})
+    public ModelAndView calculate(Model model) {
+        List<Event> events = new ArrayList<>();
+        double P, PMT, t, ror, r;
+        P = 0;
+        t = 30;
+        PMT = 500;
+        ror = 10;
+        r = ror / 100;
+
+        YearToEventMap yearToEventMap = new YearToEventMap();
+
+        Result result = doTheMath(P, PMT, t, r, yearToEventMap);
+        model.addAttribute("result", result);
+        model.addAttribute("events", events);
+
+        return new ModelAndView("mainpage");
+    }
+
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/calculate", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView calculate(HttpServletRequest request,@RequestParam Map<String,String> allRequestParams,
                                   @RequestParam("startingAmount") double P,
@@ -47,8 +67,9 @@ public class Controller {
 
         Result result = doTheMath(P, PMT, t, r, yearToEventMap);
         model.addAttribute("result", result);
+        model.addAttribute("events", events);
 
-        return new ModelAndView("results");
+        return new ModelAndView("mainpage");
     }
 
     private Result doTheMath(double P, double PMT, double t, double r, YearToEventMap yearToEventMap) {

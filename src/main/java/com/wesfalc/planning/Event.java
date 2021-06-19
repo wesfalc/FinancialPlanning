@@ -3,6 +3,8 @@ package com.wesfalc.planning;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.UUID;
+
 @Data
 @Accessors (fluent = true)
 public class Event {
@@ -12,9 +14,16 @@ public class Event {
 
         public static EventType fromText(String text) {
             switch (text) {
+                case "(One Time Contribution)" :
                 case "oneTimeContribution" : return ONE_TIME_CONTRIBUTION;
+
+                case "(Monthly Contribution)":
                 case "monthlyContribution" : return MONTHLY_CONTRIBUTION;
+
+                case "(One Time Withdrawal)" :
                 case "oneTimeWithdrawal" :   return ONE_TIME_WITHDRAWAL;
+
+                case "(Monthly Withdrawal)":
                 case "monthlyWithdrawal" :   return MONTHLY_WITHDRAWAL;
             }
             throw new IllegalArgumentException("Cannot recognize event type -  " + text);
@@ -37,12 +46,20 @@ public class Event {
     private String description;
     private int year;
 
+    // these 3 fields below are for the UI
+    private String data;
+    private String id;
+    private String name;
+
     public String amountString() {
         return Utils.moneyFormat(amount);
     }
 
     public static Event parse(String eventData) {
         Event event = new Event();
+        event.data = eventData;
+        event.id = UUID.randomUUID().toString();
+        event.name = "eventData" + event.id();
 
         String[] fields = eventData.split("::");
         for (String field : fields) {
