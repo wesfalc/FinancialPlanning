@@ -37,45 +37,44 @@ public class Controller {
                 events.add(event);
             }
         }
+
+        YearToEventMap yearToEventMap = new YearToEventMap();
+        for (Event event : events) {
+            yearToEventMap.putEvent(event.year(), event);
+        }
+
         double r = ror / 100;
 
-        Result result = doTheMath(P, PMT, t, r, events);
+        Result result = doTheMath(P, PMT, t, r, yearToEventMap);
         model.addAttribute("result", result);
 
         return new ModelAndView("results");
     }
 
-    private Result doTheMath(double P, double PMT, double t, double r, List<Event> events) {
+    private Result doTheMath(double P, double PMT, double t, double r, YearToEventMap yearToEventMap) {
 
         Result result = new Result();
         result.startingAmount(P);
         result.rateOfReturn(r * 100);
 
-        ResultRow row = new ResultRow();
-
-        int eventIndex = 0;
-
         for (int time = 1; time <= t ; time ++) {
 
-        if (eventIndex < events.size()) {
-            Event event = events.get(eventIndex);
-            if (event.year() == time) {
-                log.info("added event to year {} , ev =  {}", time, event );
-                row.event(event);
+        List<Event> events = yearToEventMap.getEventsForYear(time);
 
+        for (Event event : events) {
+            log.info("added event to year {} , ev =  {}", time, event );
+            ResultRow row = new ResultRow();
+            row.event(event);
 
-                switch (event.type()) {
-                    case ONE_TIME_CONTRIBUTION: P = P + event.amount(); break;
-                    case ONE_TIME_WITHDRAWAL:   P = P - event.amount(); break;
-                    case MONTHLY_CONTRIBUTION:  PMT = event.amount(); break;
-                    case MONTHLY_WITHDRAWAL:    PMT = -1 * event.amount(); break;
-                }
-                row.balance(P);
-                result.addRow(row);
-
-                eventIndex ++;
-                row = new ResultRow();
+            switch (event.type()) {
+               case ONE_TIME_CONTRIBUTION: P = P + event.amount(); break;
+               case ONE_TIME_WITHDRAWAL:   P = P - event.amount(); break;
+               case MONTHLY_CONTRIBUTION:  PMT = event.amount(); break;
+               case MONTHLY_WITHDRAWAL:    PMT = -1 * event.amount(); break;
             }
+
+            row.balance(P);
+            result.addRow(row);
         }
 
             double gain = PMT * ((Math.pow((1 + r / n), n * 1) - 1) / (r / n));
@@ -84,13 +83,12 @@ public class Controller {
 
             double earnings = P - lastP - 12 * PMT;
 
+            ResultRow row = new ResultRow();
             row.year(time);
             row.investment(12 * PMT);
             row.earnings(earnings);
             row.balance(P);
             result.addRow(row);
-
-            row = new ResultRow();
         }
 
         return result;
