@@ -47,7 +47,7 @@ public class Controller implements ErrorController {
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/error", method = {RequestMethod.POST, RequestMethod.GET})
     public ModelAndView error(Model model) {
-        log.info("There was an error");
+        log.info("Error page hit.");
         return indexPage(model);
     }
 
